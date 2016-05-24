@@ -8,28 +8,28 @@ serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 serverSocket.bind(('127.0.0.1', port))
 
-serverSocket.listen()
+serverSocket.listen(5)
 
 input = [serverSocket, sys.stdin]
 
 while 1:
-	inputfd, outputfd, exceptfd = select.select(input, [], [])
-	
-	for client in inputfd:
-		if client == serverSocket:
-			client = serverSocket.accept();
-			address = serverSocket.accept();
-			
-			input.append(client)
+    inputfd, outputfd, exceptfd = select.select(input, [], [])
 
-		else:
-			payload = client.recv(1024)
-			
-			if payload:
-				client.send(payload)
-			else:
-				client.close()
+    for client in inputfd:
+        if client == serverSocket:
+            client = serverSocket.accept();
+            address = serverSocket.accept();
 
-				input.remove(client)
+            input.append(client)
+
+        else:
+            payload = client.recv(1024)
+
+            if payload:
+                client.send(payload)
+            else:
+                client.close()
+
+                input.remove(client)
 
 serverSocket.close()
