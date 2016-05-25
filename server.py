@@ -6,6 +6,8 @@ import sys
 address = '127.0.0.1'
 port = 10000
 bufferSize = 1024
+maxQueue = 2
+roomCount = 0
 clientQueue = {}
 
 
@@ -28,10 +30,24 @@ while inputs:
             clientConnection, clientAddress = fd.accept()
 
             # if there are < 2 people currently connected
-            inputs.append(clientConnection)
-            # also put in the messageQueue for data the server will send; messageQueue acts as a buffer
-            messageQueue[clientConnection] = Queue.Queue()
-            # else, add to clientQueue
+            if roomCount < maxQueue:
+                status = 'ready'
+                inputs.append(clientConnection)
+
+                # also put in the messageQueue for data the server will send; messageQueue acts as a buffer
+                messageQueue[clientConnection] = Queue.Queue()
+                messageQueue[clientConnection].put(status)
+                output.append(clientConnection)
+
+                roomCount += 1
+            # else, add to clientQueue and make status = 'false'
+            else:
+                status = 'queue'
+
+                clientQueue[clientConnection] = Queue.Queue()
+                messageQueue[clientConnection] = Queue.Queue()
+                messageQueue[clientConnection].put(status)
+                output.append(clientConnection)
 
         else:
             # a client has sent data, so the server needs to receive it
@@ -54,6 +70,20 @@ while inputs:
                 del messageQueue[fd]
 
                 fd.close()
+
+                roomCount -= 1
+                ''' We need to pop the clientQueue and tell that client that we are ready
+                if len(clientQueue) >= 1:
+                    nextClient = clientQueue.pop(0)
+
+                    inputs.append(nextClient)
+                    status = 'ready'
+                    messageQueue[nextClient] = Queue.Queue()
+                    messageQueue[nextClient].put(status)
+                    output.append(nextClient)
+
+                    roomCount += 1*/
+                '''
 
     for fd in outputfd:
         try:
