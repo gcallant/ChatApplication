@@ -3,11 +3,28 @@ import socket
 import select
 import sys
 
+class Qu:
+    def __init__(self):
+        self.items = []
+
+    def isEmpty(self):
+        return self.items == []
+
+    def enqueue(self, item):
+        self.items.insert(0, item)
+
+    def dequeue(self):
+        return self.items.pop()
+
+    def size(self):
+        return len(self.items)
+
 address = '127.0.0.1'
 port = 10000
 bufferSize = 1024
 maxQueue = 2
 roomCount = 0
+cQ = Qu()
 clientQueue = {}
 
 
@@ -45,6 +62,7 @@ while inputs:
                 status = 'queue'
 
                 clientQueue[clientConnection] = Queue.Queue()
+                cQ.enqueue(clientConnection)
                 messageQueue[clientConnection] = Queue.Queue()
                 messageQueue[clientConnection].put(status)
                 output.append(clientConnection)
@@ -72,18 +90,23 @@ while inputs:
                 fd.close()
 
                 roomCount -= 1
-                ''' We need to pop the clientQueue and tell that client that we are ready
-                if len(clientQueue) >= 1:
-                    nextClient = clientQueue.pop(0)
+                try:
+                    if cQ.size >= 1:
+                        nextClient = cQ.dequeue()
 
-                    inputs.append(nextClient)
-                    status = 'ready'
-                    messageQueue[nextClient] = Queue.Queue()
-                    messageQueue[nextClient].put(status)
-                    output.append(nextClient)
+                        if len(clientQueue) >= 1:
+                            print 'dequeued successfully'
 
-                    roomCount += 1*/
-                '''
+                        inputs.append(nextClient)
+                        status = 'ready'
+                        messageQueue[nextClient] = Queue.Queue()
+                        messageQueue[nextClient].put(status)
+                        output.append(nextClient)
+
+                        roomCount += 1
+                except Exception:
+                    print 'hi'
+
 
     for fd in outputfd:
         try:
