@@ -32,4 +32,4 @@ Here are a few notes/specs about this program:
 •	Once a game is finished the players will be given the option to play again or to quit the game.  If they decide to play again, they will be placed into the queue and will have to wait there turn to play again.  If they choose to quit then their connection to the server will be closed.
 
 •	Test Cases:
-Here is a list of what we tried in order to break our program:
+Here is a list of what we tried in order to break our program.
