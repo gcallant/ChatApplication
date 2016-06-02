@@ -20,7 +20,7 @@ class Qu:
         return len(self.items)
 
 address = '127.0.0.1'
-port = 10000
+port = 10002
 bufferSize = 1024
 maxQueue = 2
 roomCount = 0
@@ -59,7 +59,7 @@ while inputs:
 
                 # also put in the messageQueue for data the server will send; messageQueue acts as a buffer
                 messageQueue[clientConnection] = Queue.Queue()
-                messageQueue[clientConnection].put(status)
+                messageQueue[clientConnection].put(status + str(roomCount))
                 output.append(clientConnection)
 
                 roomCount += 1
@@ -108,6 +108,10 @@ while inputs:
                             winner = 1
                         elif playerOne == 'S' and playerTwo == 'S':
                             winner = 0
+                    else:
+                        messageQueue[fd].put('wait')
+                        if fd not in output:
+                            output.append(fd)
 
                 if winner != -1:
                     messageQueue[fd].put(winner)
