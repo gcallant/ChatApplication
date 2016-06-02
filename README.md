@@ -33,3 +33,7 @@ Here are a few notes/specs about this program:
 
 •	Test Cases:
 Here is a list of what we tried in order to break our program.
+•	We have tried using command + c while in a client to end the conection abruptly and see if a player would be added from the queue.
+•	Test Server disconnect? Neccessary?
+•	Check to see what happens if queue is full?
+•	Anything else?  Not sure just yet...
