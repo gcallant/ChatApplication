@@ -39,3 +39,6 @@ while clientSocket:
 
     if clientInput:
         clientSocket.send(clientInput)
+        result = clientSocket.recv(bufferSize)
+
+        print result
