@@ -36,6 +36,12 @@ inputs = [serverSocket]
 output = []
 messageQueue = {}
 
+startGame = False
+playerOne = ''
+playerTwo = ''
+winner = -1
+
+
 while inputs:
     # select will return three lists containing subsets of the contents that were passed in
     inputfd, outputfd, exceptfd = select.select(inputs, output, inputs)
@@ -57,6 +63,10 @@ while inputs:
                 output.append(clientConnection)
 
                 roomCount += 1
+
+                if roomCount == maxQueue:
+                    startGame = True
+
             # else, add to clientQueue and make status = 'false'
             else:
                 status = 'queue'
@@ -72,6 +82,38 @@ while inputs:
             data = fd.recv(bufferSize)
 
             if data:
+
+                if startGame == True:
+                    if playerOne == '':
+                        playerOne = data
+                    else:
+                        playerTwo = data
+
+                    if playerOne != '' and playerTwo != '':
+                        if playerOne == 'R' and playerTwo == 'R':
+                            winner = 0
+                        elif playerOne == 'R' and playerTwo == 'P':
+                            winner = 2
+                        elif playerOne == 'R' and playerTwo == 'S':
+                            winner = 1
+                        elif playerOne == 'P' and playerTwo == 'R':
+                            winner = 1
+                        elif playerOne == 'P' and playerTwo == 'P':
+                            winner = 0
+                        elif playerOne == 'P' and playerTwo == 'S':
+                            winner = 2
+                        elif playerOne == 'S' and playerTwo == 'R':
+                            winner = 2
+                        elif playerOne == 'S' and playerTwo == 'P':
+                            winner = 1
+                        elif playerOne == 'S' and playerTwo == 'S':
+                            winner = 0
+
+                if winner != -1:
+                    messageQueue[fd].put(winner)
+                    if fd not in output:
+                        output.append(fd)
+
                 print 'Server received a message. Adding to messageQueue'
                 messageQueue[fd].put(data)
 
@@ -111,7 +153,7 @@ while inputs:
     for fd in outputfd:
         try:
             message = messageQueue[fd].get_nowait()
-            fd.send(message)
+            fd.send(str(message))
         except Queue.Empty:
             output.remove(fd)
 
