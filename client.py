@@ -85,7 +85,7 @@ while isPlaying:
             print 'Waiting for your opponent!'
 
             result = clientSocket.recv(bufferSize)
-            clientSocket.recv(bufferSize - result)
+            result = clientSocket.recv(bufferSize)
 
         if '0' in result:
             print 'The match was a draw!'
