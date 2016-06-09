@@ -19,14 +19,45 @@ class Qu:
     def size(self):
         return len(self.items)
 
+def usage():
+    print 'USAGE: python server.py <PORT> <MAXQUEUE> <BUFFERSIZE>'
+    exit(0)
+
+
+if len(sys.argv) > 1:
+    if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
+        usage()
+
+    elif sys.argv[1].isdigit():
+        port = int(sys.argv[1])
+        if port < 1000 or port > 25000:
+            usage()
+    else:
+        usage()
+else:
+    usage()
+
 address = '127.0.0.1'
-port = 10002
-bufferSize = 1024
-maxQueue = 2
+
+if len(sys.argv) > 2:
+    if sys.argv[2].isdigit():
+        maxQueue = int(sys.argv[2])
+        if maxQueue < 1 or maxQueue > 999:
+            usage()
+    else:
+        maxQueue = 2
+
+if len(sys.argv) > 3:
+    if sys.argv[3].isdigit():
+        bufferSize = int(sys.argv[3])
+        if bufferSize < 32 or bufferSize > 99999:
+            usage()
+    else:
+        bufferSize = 1024
+
 roomCount = 0
 cQ = Qu()
 clientQueue = {}
-
 
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.bind((address, port))
@@ -40,7 +71,7 @@ startGame = False
 playerOne = ''
 playerTwo = ''
 winner = -1
-
+wait = None
 
 while inputs:
     # select will return three lists containing subsets of the contents that were passed in
@@ -84,10 +115,16 @@ while inputs:
             if data:
 
                 if startGame == True:
-                    if playerOne == '':
-                        playerOne = data
+                    if '1' in data:
+                        playerOne = data[:1]
+
+                        if wait is None:
+                            wait = fd
                     else:
-                        playerTwo = data
+                        playerTwo = data[:1]
+
+                        if wait is None:
+                            wait = fd
 
                     if playerOne != '' and playerTwo != '':
                         if playerOne == 'R' and playerTwo == 'R':
@@ -112,17 +149,40 @@ while inputs:
                         messageQueue[fd].put('wait')
                         if fd not in output:
                             output.append(fd)
+                else:
+                    messageQueue[fd].put('wait')
+                    if fd not in output:
+                        output.append(fd)
+
+                    if '1' in data:
+                        playerOne = data[:1]
+                        if wait is None:
+                            wait = fd
+                    else:
+                        playerTwo = data[:2]
+                        if wait is None:
+                            wait = fd
 
                 if winner != -1:
                     messageQueue[fd].put(winner)
                     if fd not in output:
                         output.append(fd)
 
-                print 'Server received a message. Adding to messageQueue'
-                messageQueue[fd].put(data)
+                    wait.send(str(winner))
 
-                if fd not in output:
-                    output.append(fd)
+                    wait = None
+                    startGame = False
+                    playerOne = ''
+                    playerTwo = ''
+                    winner = -1
+                    roomCount = 2
+
+                else:
+                    print 'Server received a message. Adding to messageQueue'
+                    messageQueue[fd].put(data)
+
+                    if fd not in output:
+                        output.append(fd)
             else:
                 # client has disconnected
                 print 'A client has disconnected. Cleaning output list and messageQueue'
@@ -151,13 +211,14 @@ while inputs:
 
                         roomCount += 1
                 except Exception:
-                    print 'hi'
+                    print ''
 
 
     for fd in outputfd:
         try:
-            message = messageQueue[fd].get_nowait()
-            fd.send(str(message))
+            if roomCount > 0:
+                message = messageQueue[fd].get_nowait()
+                fd.send(str(message))
         except Queue.Empty:
             output.remove(fd)
 

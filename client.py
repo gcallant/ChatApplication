@@ -1,4 +1,5 @@
 import socket
+import sys
 
 def getinput():
     isCleanInput = False
@@ -12,10 +13,34 @@ def getinput():
 
     return clientInput
 
+def usage():
+    print 'USAGE: python client.py <ADDRESS> <PORT> <BUFFERSIZE>'
+    exit(0)
 
-address = '127.0.0.1'
-port = 10002
-bufferSize = 1024
+if len(sys.argv) > 1:
+    if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
+        usage()
+    else:
+        if len(sys.argv) > 2:
+
+            address = sys.argv[1]
+
+            if sys.argv[2].isdigit():
+                port = int(sys.argv[2])
+                if port < 1000 or port > 25000:
+                    usage()
+        else:
+            usage()
+
+        if len(sys.argv) > 3:
+            if sys.argv[3].isdigit():
+                bufferSize = int(sys.argv[3])
+                if bufferSize < 32 or bufferSize > 99999:
+                    usage()
+        else:
+            bufferSize = 1024
+else:
+    usage()
 
 choices = ('R', 'P', 'S')
 
@@ -42,19 +67,19 @@ if 'queue' in status:
     print(status)
     print 'You are now connected!'
 
-while clientSocket:
+isPlaying = True
+
+while isPlaying:
     clientInput = getinput()
 
     if clientInput:
-        clientSocket.send(clientInput)
+        clientSocket.send(clientInput + str(player))
         result = clientSocket.recv(bufferSize)
 
         if 'wait' in result:
             print 'Waiting for your opponent!'
 
             result = clientSocket.recv(bufferSize)
-            if choices in result:
-                result = clientSocket.recv(bufferSize)
 
         if '0' in result:
             print 'The match was a draw!'
@@ -67,4 +92,7 @@ while clientSocket:
         elif '2' in result and player == '2':
             print 'You Won!'
 
-        print result
+        print 'Disconnecting to make room for other players. Thank you for playing SPEED-RPS!'
+
+        clientSocket.close()
+        isPlaying = False
