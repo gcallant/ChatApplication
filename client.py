@@ -14,7 +14,7 @@ def getinput():
 
 
 address = '127.0.0.1'
-port = 10002
+port = 10001
 bufferSize = 1024
 
 choices = ('R', 'P', 'S')
@@ -42,19 +42,19 @@ if 'queue' in status:
     print(status)
     print 'You are now connected!'
 
-while clientSocket:
+isPlaying = True
+
+while isPlaying:
     clientInput = getinput()
 
     if clientInput:
-        clientSocket.send(clientInput)
+        clientSocket.send(clientInput + str(player))
         result = clientSocket.recv(bufferSize)
 
         if 'wait' in result:
             print 'Waiting for your opponent!'
 
             result = clientSocket.recv(bufferSize)
-            if choices in result:
-                result = clientSocket.recv(bufferSize)
 
         if '0' in result:
             print 'The match was a draw!'
@@ -67,4 +67,7 @@ while clientSocket:
         elif '2' in result and player == '2':
             print 'You Won!'
 
-        print result
+        print 'Disconnecting to make room for other players. Thank you for playing SPEED-RPS!'
+
+        clientSocket.close()
+        isPlaying = False
