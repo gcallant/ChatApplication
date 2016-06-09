@@ -1,9 +1,9 @@
 # Rock Paper Scissors Application
 
 0.5) Curran Higgins: server and client work
-Grant Callant: select, exception handling, and input parameter work
-Ashley McBride: Queue work
-Travis Arnold: Proposal and client work
+* Grant Callant: select, exception handling, and input parameter work
+* Ashley McBride: Queue work
+* Travis Arnold: Proposal and client work
 
 1)	In this game you will be playing the game rock, paper, scissors against one other person by starting up a client
 program, which then calls to a server for a connection.  The server then connects you to another player from a queue

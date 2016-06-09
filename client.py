@@ -102,3 +102,7 @@ while isPlaying:
 
         clientSocket.close()
         isPlaying = False
+
+def reQueue():
+    isPlaying = False
+
