@@ -32,7 +32,7 @@ if len(sys.argv) > 1:
 
             if sys.argv[2].isdigit():
                 port = int(sys.argv[2])
-                if port < 1000 or port > 25000:
+                if port < 1000 or port > 65535:
                     usage()
         else:
             usage()
@@ -85,7 +85,7 @@ while isPlaying:
             print 'Waiting for your opponent!'
 
             result = clientSocket.recv(bufferSize)
-            result = clientSocket.recv(bufferSize)
+            clientSocket.recv(bufferSize - result)
 
         if '0' in result:
             print 'The match was a draw!'
