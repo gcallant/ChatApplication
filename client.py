@@ -19,7 +19,12 @@ def usage():
 
 if len(sys.argv) > 1:
     if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
-        usage()
+        if(sys.argv[1].isDigit()):
+            address = int(sys.argv[1])
+        elif(not sys.argv[1].isDigit()):
+            address = sys.argv[1]
+        else:
+            usage()
     else:
         if len(sys.argv) > 2:
 

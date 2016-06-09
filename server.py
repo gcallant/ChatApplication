@@ -27,6 +27,10 @@ address = '127.0.0.1'
 
 if len(sys.argv) > 1:
     if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
+        if(sys.argv[1].isDigit()):
+            address = int(sys.argv[1])
+        elif(not sys.argv[1].isDigit()):
+            address = sys.argv[1]
         usage()
 
     else:
@@ -39,15 +43,15 @@ bufferSize = 1024
 
 if len(sys.argv) > 2:
     if sys.argv[2].isdigit():
-        port = sys.argv[2]
-        if port < 1000 or port > 25000:
+        port = int(sys.argv[2])
+        if port < 1000 or port > 65535:
             usage()
 else:
     usage()
 
 if len(sys.argv) > 3:
     if sys.argv[3].isdigit():
-        maxQueue = sys.argv[3]
+        maxQueue = int(sys.argv[3])
 
         if maxQueue < 1 or maxQueue > 999:
             usage()
