@@ -1,4 +1,5 @@
 import socket
+import sys
 
 def getinput():
     isCleanInput = False
@@ -12,10 +13,34 @@ def getinput():
 
     return clientInput
 
+def usage():
+    print 'USAGE: python client.py <ADDRESS> <PORT> <BUFFERSIZE>'
+    exit(0)
 
-address = '127.0.0.1'
-port = 10001
-bufferSize = 1024
+if len(sys.argv) > 1:
+    if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
+        usage()
+    else:
+        if len(sys.argv) > 2:
+
+            address = sys.argv[1]
+
+            if sys.argv[2].isdigit():
+                port = int(sys.argv[2])
+                if port < 1000 or port > 25000:
+                    usage()
+        else:
+            usage()
+
+        if len(sys.argv) > 3:
+            if sys.argv[3].isdigit():
+                bufferSize = int(sys.argv[3])
+                if bufferSize < 32 or bufferSize > 99999:
+                    usage()
+        else:
+            bufferSize = 1024
+else:
+    usage()
 
 choices = ('R', 'P', 'S')
 
