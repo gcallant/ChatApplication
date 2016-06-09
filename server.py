@@ -1,7 +1,6 @@
 import Queue
 import socket
 import select
-import sys
 
 class Qu:
     def __init__(self):
@@ -82,6 +81,8 @@ while inputs:
             data = fd.recv(bufferSize)
 
             if data:
+                if roomCount >= 2:
+                    startGame = True
 
                 if startGame == True:
                     if '1' in data:
@@ -95,7 +96,7 @@ while inputs:
                         if wait is None:
                             wait = fd
 
-                    if playerOne != '' and playerTwo != '':
+                    if playerOne != '' and playerTwo != '' and playerOne != ' ' and playerTwo != ' ':
                         if playerOne == 'R' and playerTwo == 'R':
                             winner = 0
                         elif playerOne == 'R' and playerTwo == 'P':
@@ -174,6 +175,15 @@ while inputs:
 
                         inputs.append(nextClient)
                         status = 'ready'
+                        if playerOne == '':
+                            status += '0'
+                            playerOne += ' '
+                            #roomCount += 1
+                        else:
+                            status += '1'
+                            playerTwo += ' '
+                            #roomCount += 1
+
                         messageQueue[nextClient] = Queue.Queue()
                         messageQueue[nextClient].put(status)
                         output.append(nextClient)
