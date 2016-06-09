@@ -30,7 +30,7 @@ if len(sys.argv) > 1:
 
     elif sys.argv[1].isdigit():
         port = int(sys.argv[1])
-        if port < 1000 or port > 25000:
+        if port < 1000 or port > 99999:
             usage()
     else:
         usage()
