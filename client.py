@@ -32,7 +32,7 @@ if len(sys.argv) > 1:
 
             if sys.argv[2].isdigit():
                 port = int(sys.argv[2])
-                if port < 1000 or port > 25000:
+                if port < 1000 or port > 65535:
                     usage()
         else:
             usage()
@@ -102,3 +102,7 @@ while isPlaying:
 
         clientSocket.close()
         isPlaying = False
+
+def reQueue():
+    isPlaying = False
+
