@@ -1,6 +1,7 @@
 import Queue
 import socket
 import select
+import sys
 
 class Qu:
     def __init__(self):
@@ -18,14 +19,54 @@ class Qu:
     def size(self):
         return len(self.items)
 
+def usage():
+    print 'USAGE: python server.py <ADDRESS> <PORT> <MAXQUEUE> <BUFFERSIZE>'
+    exit(0)
+
 address = '127.0.0.1'
-port = 10001
-bufferSize = 1024
+
+if len(sys.argv) > 1:
+    if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
+        usage()
+
+    else:
+        address = sys.argv[1]
+else:
+    usage()
+
 maxQueue = 2
+bufferSize = 1024
+
+if len(sys.argv) > 2:
+    if sys.argv[2].isdigit():
+        port = sys.argv[2]
+        if port < 1000 or port > 25000:
+            usage()
+else:
+    usage()
+
+if len(sys.argv) > 3:
+    if sys.argv[3].isdigit():
+        maxQueue = sys.argv[3]
+
+        if maxQueue < 1 or maxQueue > 999:
+            usage()
+else:
+    maxQueue = 2
+
+if len(sys.argv) > 4:
+    if sys.argv[4].isdigit():
+        bufferSize = int(sys.argv[4])
+        if bufferSize < 32 or bufferSize > 99999:
+            usage()
+    else:
+        bufferSize = 1024
+else:
+    bufferSize = 1024
+
 roomCount = 0
 cQ = Qu()
 clientQueue = {}
-
 
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.bind((address, port))
@@ -81,8 +122,6 @@ while inputs:
             data = fd.recv(bufferSize)
 
             if data:
-                if roomCount >= 2:
-                    startGame = True
 
                 if startGame == True:
                     if '1' in data:
@@ -96,7 +135,7 @@ while inputs:
                         if wait is None:
                             wait = fd
 
-                    if playerOne != '' and playerTwo != '' and playerOne != ' ' and playerTwo != ' ':
+                    if playerOne != '' and playerTwo != '':
                         if playerOne == 'R' and playerTwo == 'R':
                             winner = 0
                         elif playerOne == 'R' and playerTwo == 'P':
@@ -175,22 +214,13 @@ while inputs:
 
                         inputs.append(nextClient)
                         status = 'ready'
-                        if playerOne == '':
-                            status += '0'
-                            playerOne += ' '
-                            #roomCount += 1
-                        else:
-                            status += '1'
-                            playerTwo += ' '
-                            #roomCount += 1
-
                         messageQueue[nextClient] = Queue.Queue()
                         messageQueue[nextClient].put(status)
                         output.append(nextClient)
 
                         roomCount += 1
                 except Exception:
-                    print 'hi'
+                    print ''
 
 
     for fd in outputfd:
