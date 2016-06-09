@@ -20,40 +20,53 @@ class Qu:
         return len(self.items)
 
 def usage():
-    print 'USAGE: python server.py <PORT> <MAXQUEUE> <BUFFERSIZE>'
+    print 'USAGE: python server.py <ADDRESS> <PORT> <MAXQUEUE> <BUFFERSIZE>'
     exit(0)
-
-
-if len(sys.argv) > 1:
-    if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
-        usage()
-
-    elif sys.argv[1].isdigit():
-        port = int(sys.argv[1])
-        if port < 1000 or port > 99999:
-            usage()
-    else:
-        usage()
-else:
-    usage()
 
 address = '127.0.0.1'
 
+if len(sys.argv) > 1:
+    if sys.argv[1] in ('-h', '-H', '--help', '--HELP'):
+        if(sys.argv[1].isDigit()):
+            address = int(sys.argv[1])
+        elif(not sys.argv[1].isDigit()):
+            address = sys.argv[1]
+        usage()
+
+    else:
+        address = sys.argv[1]
+else:
+    usage()
+
+maxQueue = 2
+bufferSize = 1024
+
 if len(sys.argv) > 2:
     if sys.argv[2].isdigit():
-        maxQueue = int(sys.argv[2])
-        if maxQueue < 1 or maxQueue > 999:
+        port = int(sys.argv[2])
+        if port < 1000 or port > 65535:
             usage()
-    else:
-        maxQueue = 2
+else:
+    usage()
 
 if len(sys.argv) > 3:
     if sys.argv[3].isdigit():
-        bufferSize = int(sys.argv[3])
+        maxQueue = int(sys.argv[3])
+
+        if maxQueue < 1 or maxQueue > 999:
+            usage()
+else:
+    maxQueue = 2
+
+if len(sys.argv) > 4:
+    if sys.argv[4].isdigit():
+        bufferSize = int(sys.argv[4])
         if bufferSize < 32 or bufferSize > 99999:
             usage()
     else:
         bufferSize = 1024
+else:
+    bufferSize = 1024
 
 roomCount = 0
 cQ = Qu()
