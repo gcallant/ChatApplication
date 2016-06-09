@@ -6,10 +6,10 @@ calls to a server for a connection.  The server then connects you to
 another player from a queue and then you play until one person wins.
 
 2)	The game will be operated by four major pieces:
-•	Server
-•	Client
-•	Client Management
-•	Queue
+*   Server
+*	Client
+*	Client Management
+*	Queue
 
 3)	Protocol: 
 The game will start off by first starting the server.
@@ -62,22 +62,22 @@ then the client will load. The program will
 
 5)	Specifications:
 Here are a few notes/specs about this program:
-•	The computer needs to be running at least Python 2.7 or greater.
-•	Operating system has to support Python.
-•	At least one computer is needed that can run and host the server 
+*	The computer needs to be running at least Python 2.7 or greater.
+*	Operating system has to support Python.
+*	At least one computer is needed that can run and host the server 
 program
-•	The server can host up to two players in the game and six people waiting to play in the queue
-•	The game will play the best of three games to determine a winner
-•	If someone disconnects early and they were in the current game a new player will be pulled from the queue and the scores will be reset.
-•	Once a game is finished the players will be given the option to 
+*	The server can host up to two players in the game and six people waiting to play in the queue
+*	The game will play the best of three games to determine a winner
+*	If someone disconnects early and they were in the current game a new player will be pulled from the queue and the scores will be reset.
+*	Once a game is finished the players will be given the option to 
 play again or to quit the game.  If they decide to play again, they 
 will be placed into the queue and will have to wait their turn to play 
 again.  If they choose to quit then their connection to the server 
 will be closed.
 
-•	Test Cases:
+*	Test Cases:
 Here is a list of smoke testing we have attempted.
-•	We have tried using command + c while in a client to end the 
+*	We have tried using command + c while in a client to end the 
 connection abruptly and see if a player would be added to a game from the queue.
-•	Test handling of server disconnect.
-•	Test handling of clients when queue is full.
+*	Test handling of server disconnect.
+*	Test handling of clients when queue is full.
