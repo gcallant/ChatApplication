@@ -1,3 +1,9 @@
+'''
+Important Note:
+	The server is intended to function as a dedicated server.
+	It is recommended that a client is not run on the same machine as a server.
+'''
+
 import socket
 import sys
 
