@@ -66,15 +66,14 @@ and then you play until one person wins.
 
 5)	Specifications:
   Here are a few notes/specs about this program:
-  *	The computer needs to be running at least Python 2.7 or greater.
-  *	Operating system has to support Python.
-  *	At least one computer is needed that can run and host the server program
-  *	The server can host up to two players in the game and six people waiting to play in the queue
-  *	The game will play the best of three games to determine a winner
+  *	The computer needs to be running Python 2.7.
+  *	Operating system has to support Python -- preferably *nix.
+  *	At least one computer is needed that can run and host the server program.
+  *	The server can host up to two players in the game and six people waiting to play in the queue.
+  *	The game is best out of one game ("speed" Rock-Paper-Scissors).
   *	If someone disconnects early and they were in the current game a new player will be pulled from the queue and the
     scores will be reset.
-  *	Once a game is finished the winner will remain in the game and the loser will be placed back into the queue and
-    will have to wait to play again.
+  *	Once a game is finished the winner and loser will be disconnected to make room for new users.
   * To quit the game, a player just needs to disconnect from the server.  If they choose to quit then their connection
     to the server will be closed and a new player will be pulled from the queue to join the game or the player who quit
     will be removed from the queue.
