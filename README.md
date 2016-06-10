@@ -42,7 +42,7 @@ and then you play until one person wins.
   This game uses a client-server system in order to operate and play.  In order for the game to function properly, the
   server should be started before any of the clients try to connect.
 
-  Assumptions: You must have Python 2.7 or greater installed on your operating system in order to use the functionality
+  Assumptions: You must have Python 2.7 installed on your operating system in order to use the functionality
   provided by this program. Visit [this link](https://www.python.org/downloads/) to download a version of Python for
   your operating system.
 
